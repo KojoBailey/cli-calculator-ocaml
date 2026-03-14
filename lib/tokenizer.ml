@@ -3,7 +3,7 @@ module Token = struct
   [@@deriving show]
   
   type t =
-    | Number of float
+    | Number of float (* Easier to just evaluate one number type. *)
     | Operator of operator
     | ParenthesisOpen
     | ParenthesisClose
@@ -13,6 +13,8 @@ end
 let is_digit c = c >= '0' && c <= '9'
 let is_float_literal_char c = is_digit c || c == '.'
 
+(* Does not check for and crashes on invalid input. *)
+(* An example of invalid input is "6..9". *)
 let parse_num input =
   let str = String.of_seq (List.to_seq (List.take_while is_float_literal_char input)) in
   (float_of_string str, List.drop_while is_float_literal_char input)
