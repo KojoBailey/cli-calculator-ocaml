@@ -11,7 +11,7 @@ module Token = struct
 end
 
 let is_digit (c : char) : bool = c >= '0' && c <= '9'
-let is_float_literal_char (c : char) : bool = is_digit c || c == '.'
+let is_float_literal_char (c : char) : bool = is_digit c || c = '.'
 
 (* Does not check for and crashes on invalid input. *)
 (* An example of invalid input is "6..9". *)
@@ -32,8 +32,8 @@ let tokenize (input : string) : (Token.t list, string) result  =
     | '*' :: cs -> token_map (Token.Operator Asterisk) cs
     | '/' :: cs -> token_map (Token.Operator Slash) cs
     | c :: cs when is_digit c ->
-        let (num, remaining) = parse_num (c :: cs) in
-        token_map (Token.Number num) remaining
+      let (num, remaining) = parse_num (c :: cs) in
+      token_map (Token.Number num) remaining
     | c :: _ -> Error ("Invalid token: " ^ String.make 1 c)
   in
   go chars
