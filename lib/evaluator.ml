@@ -19,9 +19,9 @@ let get_binary_op : Parser.Expression.bin_op -> float -> float -> float or_error
 let rec evaluate : Parser.Expression.t -> float or_error = function
   | Number n -> Ok n
   | BinaryOp (left, operator, right) ->
-      let* left' = evaluate left in
-      let* right' = evaluate right in
-      (get_binary_op operator) left' right'
+    let* left' = evaluate left in
+    let* right' = evaluate right in
+    (get_binary_op operator) left' right'
   | UnaryOp (operator, value) ->
-      let* value' = evaluate value in
-      (get_unary_op operator) value'
+    let* value' = evaluate value in
+    (get_unary_op operator) value'
