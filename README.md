@@ -4,10 +4,10 @@ This is a very simple command-line calculator that evaluates expressions, progra
 ## Usage
 ```
 >>> 6 + 7
-13.0
+13.
 
 >>> 6.9 * -(7/3 + 2)
--29.900000000000006
+-29.9
 ```
 
 (`>>>` denotes user input.)
@@ -17,20 +17,29 @@ To see the output of both the tokeniser and parser, run the app with `True` as t
 
 ```
 >>> 6.9 * -(7/3 + 2)
-== Tokens ==
-[TNumber 6.9,TOperator Asterisk,TOperator Minus,TParenthesisOpen,TNumber 7.0,TOperator Slash,TNumber 3.0,TOperator Plus,TNumber 2.0,TParenthesisClose]
+=== Tokens ===
+[(Tokenizer.Token.Number 6.9);
+  (Tokenizer.Token.Operator Tokenizer.Token.Asterisk);
+  (Tokenizer.Token.Operator Tokenizer.Token.Minus);
+  Tokenizer.Token.ParenthesisOpen; (Tokenizer.Token.Number 7.);
+  (Tokenizer.Token.Operator Tokenizer.Token.Slash);
+  (Tokenizer.Token.Number 3.);
+  (Tokenizer.Token.Operator Tokenizer.Token.Plus);
+  (Tokenizer.Token.Number 2.); Tokenizer.Token.ParenthesisClose]
 
-== Abstract Syntax Tree ==
-ExpBinOp (ExpNum 6.9) OpMultiply (ExpUnOp OpNegative (ExpBinOp (ExpBinOp (ExpNum 7.0) OpDivide (ExpNum 3.0)) OpAdd (ExpNum 2.0)))
+=== Abstract Syntax Tree ===
+(Parser.Expression.BinaryOp ((Parser.Expression.Number 6.9),
+   Parser.Expression.Multiply,
+   (Parser.Expression.UnaryOp (Parser.Expression.Negative,
+      (Parser.Expression.BinaryOp (
+         (Parser.Expression.BinaryOp ((Parser.Expression.Number 7.),
+            Parser.Expression.Divide, (Parser.Expression.Number 3.))),
+         Parser.Expression.Add, (Parser.Expression.Number 2.)))
+      ))
+   ))
 
-== Evaluation ==
--29.900000000000006
-```
-
-Alternatively, in GHCi, you can run the following command:
-
-```
-:set args True
+=== Result ===
+-29.9
 ```
 
 ## Features
@@ -42,14 +51,13 @@ For my own sanity, this is extremely limited, so the only supported operations a
 
 Additonally, negative numbers can be expressed (-a), and sub-expressions can be wrapped in parentheses.
 
-This should all follow the rules of [PEDMAS](https://en.wikipedia.org/wiki/Order_of_operations). If you notice anything outputting something it shouldn't, please open an [issue](https://github.com/KojoBailey/command-line-calculator-hs/issues)!
+This should all follow the rules of [PEDMAS](https://en.wikipedia.org/wiki/Order_of_operations). If you notice anything outputting something it shouldn't, please open an [issue](https://github.com/KojoBailey/command-line-calculator-ocaml/issues)!
 
 You should also get errors if you try doing anything invalid, such as `5 +- 2 *` or dividing by zero. If you are able to get something to successfully evaluate that doesn't make sense, please also open an issue!
 
 ## Motivation
-Originally, this started as a project to aid my learning of Haskell university. This resulted in a not-so-great implementation.
+Interesed in the implementation of tooling (compilers, interpreters) for programming languages, I figured that trying to implement a simple CLI calculator would be a good start.
 
-Now finished with the university module, I've become interesed in the implementation of tooling (compilers, interpreters) for programming languages, and figured that this would be the perfect place to start, vastly improving from my initial attempt.
+I've already implemented a [similar project in Haskell](https://github.com/KojoBailey/cli-calculator-hs), and I then decided to learn some OCaml and see what all the hype's about via this implementation.
 
-Unfortunately, Haskell can be quite cumbersome to program in, particularly because of how unscoped and annoying-to-use records/structs are, so I do not intend to expand the functionality of this particular application. However, I'm thinking of making a more advanced calculator tool in either OCaml or Rust. Plus, I'm confident I'll try developing a compiler for a custom programming language at some point, which would also likely be in Rust.
-
+Later, I plan to also do a similar project in Rust, although with many more features since I want to consider Rust as my "main" language going forward, replacing C++ - that is, until an even nicer language comes around.
