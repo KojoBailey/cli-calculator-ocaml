@@ -8,6 +8,12 @@ This is a very simple command-line calculator that evaluates expressions, progra
 
 >>> 6.9 * -(7/3 + 2)
 -29.9
+
+>>> x <- 3
+3.
+
+>>> 5 + x
+8.
 ```
 
 (`>>>` denotes user input.)
@@ -54,6 +60,18 @@ Additonally, negative numbers can be expressed (-a), and sub-expressions can be 
 This should all follow the rules of [PEDMAS](https://en.wikipedia.org/wiki/Order_of_operations). If you notice anything outputting something it shouldn't, please open an [issue](https://github.com/KojoBailey/command-line-calculator-ocaml/issues)!
 
 You should also get errors if you try doing anything invalid, such as `5 +- 2 *` or dividing by zero. If you are able to get something to successfully evaluate that doesn't make sense, please also open an issue!
+
+You are also able to store values in **variables**. These can only contain lowercase and uppercase Engish letters, numerical digits, and an `_`; and can only start with just lowercase letters.
+
+To assign a variable, use the `<-` syntax. Note that `<-` is *not* an operator, and is only valid as special syntax *before* an expression (not inside one).
+
+```
+>>> x <- 3 + 5
+Valid.
+
+>>> 3 + x <- 5
+Invalid!
+```
 
 ## Motivation
 Interesed in the implementation of tooling (compilers, interpreters) for programming languages, I figured that trying to implement a simple CLI calculator would be a good start.
