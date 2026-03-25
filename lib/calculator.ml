@@ -21,6 +21,7 @@ let calculate (input : string) : (float, string) result =
     print_endline ""
   end;
   let token_pools = split_by Tokenizer.Token.Separator tokens in
+  if token_pools = [] then Error "No input." else
   let result = List.fold_left (fun acc token_pool -> 
     let* _ = acc in
     let assign_target : string option ref = ref None in
