@@ -53,15 +53,26 @@ To see the output of both the tokeniser and parser, run the app with `True` as t
 
 ## Features
 ### Operators
-For my own sanity, this is extremely limited, so the only supported operations are:
+There are quite a few operators defined for this calculator:
 - Addition (a + b)
 - Subtraction (a - b)
 - Multiplication (a * b)
 - Division (a / b)
+- Negation (-a)
+- Exponentiation (a ^ b)
+- Percentage (a% = a / 100)
+- Factorial (a! = a * a-1 * ... * 1)
+- Equals (a = b)
+- Not (!a)
+- And (a and b)
+- Or (a or b)
+- Xor (a xor b)
 
-Additonally, negative numbers can be expressed (-a), and sub-expressions can be wrapped in parentheses.
+Additonally, sub-expressions can be wrapped in parentheses.
 
 This should all follow the rules of [PEDMAS](https://en.wikipedia.org/wiki/Order_of_operations). If you notice anything outputting something it shouldn't, please open an [issue](https://github.com/KojoBailey/command-line-calculator-ocaml/issues)!
+
+The boolean operators will treat any non-zero value as true and zero as false, and will output `1` for true and `0` for false. The [constants](#Constants) `True` and `False` also evaluate to `1` and `0` respectively.
 
 You should also get errors if you try doing anything invalid, such as `5 +- 2 *` or dividing by zero. If you are able to get something to successfully evaluate that doesn't make sense, please also open an issue!
 

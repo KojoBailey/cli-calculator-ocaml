@@ -15,6 +15,8 @@ let eval_test_err (expr : string) =
 let () =
   Alcotest.run "Tests" [
     "evaluator", [
+      eval_test_ok "True" 1.;
+      eval_test_ok "False" 0.;
       eval_test_ok "Pi" 3.141592653589793;
       eval_test_ok "E" 2.71828;
       eval_test_ok "1234567890" 1234567890.;
@@ -48,21 +50,21 @@ let () =
       eval_test_ok "5 = 3" 0.;
       eval_test_ok "not (5 = 3)" 1.;
       eval_test_ok "not (5 = 5)" 0.;
-      eval_test_ok "1 and 1" 1.;
-      eval_test_ok "1 and 0" 0.;
-      eval_test_ok "0 and 1" 0.;
-      eval_test_ok "0 and 0" 0.;
+      eval_test_ok "True and True" 1.;
+      eval_test_ok "True and False" 0.;
+      eval_test_ok "False and True" 0.;
+      eval_test_ok "False and False" 0.;
       eval_test_ok "5 and 3" 1.;
-      eval_test_ok "0 and 0" 0.;
-      eval_test_ok "1 or 1" 1.;
-      eval_test_ok "0 or 1" 1.;
-      eval_test_ok "1 or 0" 1.;
-      eval_test_ok "0 or 0" 0.;
+      eval_test_ok "False and False" 0.;
+      eval_test_ok "True or True" 1.;
+      eval_test_ok "False or True" 1.;
+      eval_test_ok "True or False" 1.;
+      eval_test_ok "False or False" 0.;
       eval_test_ok "5 or 3" 1.;
-      eval_test_ok "1 xor 1" 0.;
-      eval_test_ok "0 xor 1" 1.;
-      eval_test_ok "1 xor 0" 1.;
-      eval_test_ok "0 xor 0" 0.;
+      eval_test_ok "True xor True" 0.;
+      eval_test_ok "False xor True" 1.;
+      eval_test_ok "True xor False" 1.;
+      eval_test_ok "False xor False" 0.;
       eval_test_ok "0 xor 3" 1.;
       eval_test_err "and <- 5";
     ];
