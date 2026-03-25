@@ -26,7 +26,7 @@ let calculate (input : string) : (float, string) result =
     let* _ = acc in
     let assign_target : string option ref = ref None in
     let tokens' = begin match (token_pool : Tokenizer.Token.t list) with
-    | Identifier id :: Assignment :: ts ->
+    | UserIdentifier id :: Assignment :: ts ->
         assign_target := Some id;
         ts
     | ts -> ts

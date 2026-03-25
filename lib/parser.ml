@@ -27,6 +27,7 @@ module Expression = struct
   | UnaryOp of un_op * t
   | Number of float
   | Variable of int
+  | Function of string * t
   [@@deriving show]
 end
 
@@ -43,7 +44,20 @@ let rec parse_l4 : Tokenizer.Token.t list -> parse_result = function
     | _ -> Error "Missing closing parenthesis."
     end
   | Number n :: tokens -> Ok (Number n, tokens)
-  | Identifier id :: tokens ->
+  | AppIdentifier id :: ParenthesisOpen :: tokens ->
+    let* (args, rest) = parse_l0 tokens in
+    begin match rest with
+    | ParenthesisClose :: rest' -> 
+      if Hashtbl.mem Constants.builtin_functions id
+      then Ok (Expression.Function (id, args), rest')
+      else Error ("Undefined function: " ^ id)
+    | _ -> Error "Missing closing parenthesis."
+    end
+  | AppIdentifier id :: tokens ->
+    if Hashtbl.mem Constants.constants id
+    then Ok (Number (Hashtbl.find Constants.constants id), tokens)
+    else Error ("Undefined constant: " ^ id)
+  | UserIdentifier id :: tokens ->
     if Hashtbl.mem Variables.variable_handles id then
       let handle = Hashtbl.find Variables.variable_handles id in
       Ok (Variable handle, tokens)

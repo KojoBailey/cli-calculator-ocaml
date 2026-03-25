@@ -80,5 +80,19 @@ let () =
       eval_test_ok "0 xor 3" 1.;
       eval_test_err "and <- 5";
       eval_test_ok "x <- 5 >>> y <- 3 >>> x * y" 15.;
+      eval_test_ok "Abs(-5)" 5.;
+      eval_test_ok "Abs(5)" 5.;
+      eval_test_ok "Sin(0)" 0.;
+      eval_test_ok "Sin(Pi)" 0.;
+      eval_test_ok "Sin(2 * Pi)" 0.;
+      eval_test_ok "Sin(Pi/2)" 1.;
+      eval_test_ok "Sin(3 * Pi/2)" (-.1.);
+      eval_test_ok "Sin(-Pi/2)" (-.1.);
+      eval_test_ok "Cos(0)" 1.;
+      eval_test_ok "Cos(Pi)" (-.1.);
+      eval_test_ok "Cos(2 * Pi)" 1.;
+      eval_test_ok "Cos(Pi/2)" 0.;
+      eval_test_ok "Cos(3 * Pi/2)" 0.;
+      eval_test_ok "Cos(-Pi/2)" 0.;
     ];
   ]

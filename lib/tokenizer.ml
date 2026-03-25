@@ -25,10 +25,11 @@ module Token = struct
   | Number of float (* Easier to just evaluate one number type. *)
   | Operator of operator
   | Keyword of keyword
+  | AppIdentifier of string
+  | UserIdentifier of string
   | ParenthesisOpen
   | ParenthesisClose
   | Assignment
-  | Identifier of string
   | Separator 
   [@@deriving show]
 end
@@ -98,9 +99,7 @@ let tokenize (input : string) : (Token.t list, string) result  =
       token_map (Token.Number num) remaining
     | cs when is_constant cs ->
       let (constant, remaining) = parse_identifier cs in
-      if Hashtbl.mem Constants.constants constant
-      then token_map (Token.Number (Hashtbl.find Constants.constants constant)) remaining
-      else Error ("Undefined constant: " ^ constant)
+      token_map (Token.AppIdentifier constant) remaining
     | cs when is_identifier cs ->
       let (identifier, remaining) = parse_identifier cs in
       token_map (match identifier with
@@ -108,7 +107,7 @@ let tokenize (input : string) : (Token.t list, string) result  =
       | "and" -> Token.Keyword And
       | "or"  -> Token.Keyword Or
       | "xor" -> Token.Keyword Xor
-      | _     -> Token.Identifier identifier
+      | _     -> Token.UserIdentifier identifier
       ) remaining
     | c :: _ -> Error ("Invalid token: " ^ String.make 1 c)
   in

@@ -41,6 +41,10 @@ let get_binary_op : Parser.Expression.bin_op -> float -> float -> float or_error
 let rec evaluate : Parser.Expression.t -> float or_error = function
   | Number n -> Ok n
   | Variable handle -> Ok (Dynarray.get Variables.variables handle)
+  | Function (id, args) ->
+    let fn = Hashtbl.find Constants.builtin_functions id in
+    let* ev_args = evaluate args in
+    Ok (fn ev_args)
   | BinaryOp (left, operator, right) ->
     let* left' = evaluate left in
     let* right' = evaluate right in
