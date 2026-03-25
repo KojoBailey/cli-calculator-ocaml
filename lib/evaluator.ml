@@ -11,10 +11,11 @@ let get_unary_op : Parser.Expression.un_op -> float -> float or_error = function
   | Negative -> fun x -> Ok (-. x)
 
 let get_binary_op : Parser.Expression.bin_op -> float -> float -> float or_error = function
-  | Add      -> fun x y -> Ok (x +. y)
-  | Subtract -> fun x y -> Ok (x -. y)
-  | Multiply -> fun x y -> Ok (x *. y)
-  | Divide   -> safe_div
+  | Add          -> fun x y -> Ok (x +. y)
+  | Subtract     -> fun x y -> Ok (x -. y)
+  | Multiply     -> fun x y -> Ok (x *. y)
+  | Divide       -> safe_div
+  | Exponentiate -> fun x y -> Ok (Float.pow x y)
 
 let rec evaluate : Parser.Expression.t -> float or_error = function
   | Number n -> Ok n

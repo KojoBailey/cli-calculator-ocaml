@@ -4,6 +4,7 @@ module Expression = struct
   | Subtract
   | Multiply
   | Divide
+  | Exponentiate
   [@@deriving show]
 
   type un_op = Negative
@@ -21,25 +22,35 @@ let ( let* ) = Result.bind
 
 type parse_result = (Expression.t * Tokenizer.Token.t list, string) result
 
-(* LAYER 3 - Parenthesis, Negatives, Numbers *)
-let rec parse_l3 : Tokenizer.Token.t list -> parse_result = function
-  | ParenthesisOpen :: ts ->
-    let* (expr, rest) = parse_l1 ts in
+(* LAYER 4 - Parenthesis, Variables, Numbers *)
+let rec parse_l4 : Tokenizer.Token.t list -> parse_result = function
+  | ParenthesisOpen :: tokens ->
+    let* (expr, rest) = parse_l1 tokens in
     begin match rest with
     | ParenthesisClose :: rest' -> Ok (expr, rest')
     | _ -> Error "Missing closing parenthesis."
     end
-  | Operator Minus :: ts ->
-    let* (expr, rest) = parse_l3 ts in
-    Ok (Expression.UnaryOp (Negative, expr), rest)
-  | Number n :: ts -> Ok (Number n, ts)
-  | Identifier id :: ts ->
+  | Number n :: tokens -> Ok (Number n, tokens)
+  | Identifier id :: tokens ->
     if Hashtbl.mem Variables.variable_handles id then
       let handle = Hashtbl.find Variables.variable_handles id in
-      Ok (Variable handle, ts)
+      Ok (Variable handle, tokens)
     else Error ("Undefined variable: " ^ id)
+  | Operator Minus :: tokens ->
+    let* (expr, rest) = parse_l3 tokens in
+    Ok (Expression.UnaryOp (Negative, expr), rest)
   | [] -> Error "Unexpected end of expression."
   | t :: _ -> Error ("Unexpected token: " ^ [%show: Tokenizer.Token.t] t)
+
+(* LAYER 3 - Exponentiation *)
+and parse_l3_rest : Expression.t * Tokenizer.Token.t list -> parse_result = function
+  | (left, Operator Caret :: tokens) ->
+    let* (expr, rest) = parse_l4 tokens in
+    parse_l3_rest (Expression.BinaryOp (left, Exponentiate, expr), rest)
+  | (left, tokens) -> Ok (left, tokens)
+
+and parse_l3 (tokens : Tokenizer.Token.t list) : parse_result =
+  let* parsed = parse_l4 tokens in parse_l3_rest parsed
 
 (* LAYER 2 - Multiplication, Division *)
 and parse_l2_rest : Expression.t * Tokenizer.Token.t list -> parse_result = function
