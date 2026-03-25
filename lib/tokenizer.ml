@@ -29,6 +29,7 @@ module Token = struct
   | ParenthesisClose
   | Assignment
   | Identifier of string
+  | Separator 
   [@@deriving show]
 end
 
@@ -76,6 +77,7 @@ let tokenize (input : string) : (Token.t list, string) result  =
   and go = function
     | []        -> Ok []
     | ' ' :: cs -> go cs
+    | '>' :: '>' :: '>' :: cs -> token_map Token.Separator cs
     | '(' :: cs -> token_map Token.ParenthesisOpen cs
     | ')' :: cs -> token_map Token.ParenthesisClose cs
     | '+' :: cs -> token_map (Token.Operator Plus) cs

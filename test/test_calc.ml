@@ -79,5 +79,6 @@ let () =
       eval_test_ok "False xor False" 0.;
       eval_test_ok "0 xor 3" 1.;
       eval_test_err "and <- 5";
+      eval_test_ok "x <- 5 >>> y <- 3 >>> x * y" 15.;
     ];
   ]
