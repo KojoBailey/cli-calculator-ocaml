@@ -6,15 +6,16 @@ module Token = struct
   | Slash    (*| / |*)
   | Caret    (*| ^ |*)
   | Percent  (*| % |*)
+  | Bang     (*| ! |*)
   [@@deriving show]
   
   type t =
-    | Number of float (* Easier to just evaluate one number type. *)
-    | Operator of operator
-    | ParenthesisOpen
-    | ParenthesisClose
-    | Assignment
-    | Identifier of string
+  | Number of float (* Easier to just evaluate one number type. *)
+  | Operator of operator
+  | ParenthesisOpen
+  | ParenthesisClose
+  | Assignment
+  | Identifier of string
   [@@deriving show]
 end
 
@@ -70,6 +71,7 @@ let tokenize (input : string) : (Token.t list, string) result  =
     | '/' :: cs -> token_map (Token.Operator Slash) cs
     | '^' :: cs -> token_map (Token.Operator Caret) cs
     | '%' :: cs -> token_map (Token.Operator Percent) cs
+    | '!' :: cs -> token_map (Token.Operator Bang) cs
     | '<' :: '-' :: cs -> token_map Token.Assignment cs
     | c :: cs when is_digit c ->
       let (num, remaining) = parse_num (c :: cs) in

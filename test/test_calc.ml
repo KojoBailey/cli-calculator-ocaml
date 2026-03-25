@@ -37,5 +37,12 @@ let () =
       eval_test_ok "42%" 0.42;
       eval_test_ok "5^2%" 0.25;
       eval_test_err "%2";
+      eval_test_ok "5!" 120.;
+      eval_test_ok "0!" 1.;
+      eval_test_ok "1!" 1.;
+      eval_test_ok "-5!" (-120.);
+      eval_test_err "(-5)!";
+      eval_test_err "!5";
+      eval_test_err "4.2!";
     ];
   ]
