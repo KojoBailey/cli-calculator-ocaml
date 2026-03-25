@@ -18,6 +18,9 @@ let () =
       eval_test_ok "Pi" 3.141592653589793;
       eval_test_ok "E" 2.71828;
       eval_test_ok "1234567890" 1234567890.;
+      eval_test_err "1 ++ 2";
+      eval_test_err "+ 2";
+      eval_test_err "5 +* 3";
       eval_test_ok "1 + 1" 2.;
       eval_test_ok "9 + 8" 17.;
       eval_test_ok "9 - 7" 2.;
@@ -30,5 +33,9 @@ let () =
       eval_test_err "3 + y";
       eval_test_err "Foo <- 5";
       eval_test_err "3 + Foo";
+      eval_test_ok "100%" 1.;
+      eval_test_ok "42%" 0.42;
+      eval_test_ok "5^2%" 0.25;
+      eval_test_err "%2";
     ];
   ]

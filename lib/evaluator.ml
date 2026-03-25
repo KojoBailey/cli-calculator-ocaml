@@ -8,7 +8,8 @@ let safe_div (n : float) (d : float) : float or_error =
     else Ok (n /. d)
 
 let get_unary_op : Parser.Expression.un_op -> float -> float or_error = function
-  | Negative -> fun x -> Ok (-. x)
+  | Negative   -> fun x -> Ok (-. x)
+  | Percentage -> fun x -> Ok (x /. 100.)
 
 let get_binary_op : Parser.Expression.bin_op -> float -> float -> float or_error = function
   | Add          -> fun x y -> Ok (x +. y)

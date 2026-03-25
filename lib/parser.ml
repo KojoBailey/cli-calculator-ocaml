@@ -7,7 +7,9 @@ module Expression = struct
   | Exponentiate
   [@@deriving show]
 
-  type un_op = Negative
+  type un_op =
+  | Negative
+  | Percentage
   [@@deriving show]
 
   type t =
@@ -22,7 +24,7 @@ let ( let* ) = Result.bind
 
 type parse_result = (Expression.t * Tokenizer.Token.t list, string) result
 
-(* LAYER 4 - Parenthesis, Variables, Numbers *)
+(* LAYER 4 - Parenthesis, Negatives, Variables, Numbers *)
 let rec parse_l4 : Tokenizer.Token.t list -> parse_result = function
   | ParenthesisOpen :: tokens ->
     let* (expr, rest) = parse_l1 tokens in
@@ -42,11 +44,13 @@ let rec parse_l4 : Tokenizer.Token.t list -> parse_result = function
   | [] -> Error "Unexpected end of expression."
   | t :: _ -> Error ("Unexpected token: " ^ [%show: Tokenizer.Token.t] t)
 
-(* LAYER 3 - Exponentiation *)
+(* LAYER 3 - Exponentiation, Percentage *)
 and parse_l3_rest : Expression.t * Tokenizer.Token.t list -> parse_result = function
   | (left, Operator Caret :: tokens) ->
     let* (expr, rest) = parse_l4 tokens in
     parse_l3_rest (Expression.BinaryOp (left, Exponentiate, expr), rest)
+  | (left, Operator Percent :: tokens) ->
+    parse_l3_rest (Expression.UnaryOp (Percentage, left), tokens)
   | (left, tokens) -> Ok (left, tokens)
 
 and parse_l3 (tokens : Tokenizer.Token.t list) : parse_result =
