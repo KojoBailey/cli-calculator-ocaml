@@ -18,6 +18,7 @@ let get_binary_op : Parser.Expression.bin_op -> float -> float -> float or_error
 
 let rec evaluate : Parser.Expression.t -> float or_error = function
   | Number n -> Ok n
+  | Variable handle -> Ok (Dynarray.get Variables.variables handle)
   | BinaryOp (left, operator, right) ->
     let* left' = evaluate left in
     let* right' = evaluate right in
