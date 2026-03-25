@@ -91,8 +91,10 @@ Invalid!
 
 ### Constants
 **Constants** start with a uppercase letter and cannot be assigned to. The current supported constants are:
-- Pi: `Pi` = `3.141592653589793`
-- Euler's constant: `E` = `78.5398163397`
+- `True` = `1`
+- `False` = `0`
+- `Pi` = `3.141592653589793`
+- `E` (Euler's constant) = `78.5398163397`
 
 ```
 >>> Pi * 5 * 5
