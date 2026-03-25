@@ -107,6 +107,14 @@ Invalid! Cannot create constants.
 Invalid! Constant isn't defined.
 ```
 
+### TBA
+I don't guarantee I'll add these, but some features I'm thinking of adding are:
+- More constants, probably primarily from Physics since it has a lot.
+- Functions, both built-in (`Cos`, `Log`, etc.) and user-defined.
+- Chaining commands via `;` or some other operator (`>>>` looks schmexy).
+- Ordering boolean operators, `<`, `<=`, `>`, and `>=`.
+- Implicit multiplication for numbers next to variables (i.e. `5x` = `5 * x`).
+
 ## Motivation
 Interesed in the implementation of tooling (compilers, interpreters) for programming languages, I figured that trying to implement a simple CLI calculator would be a good start.
 
