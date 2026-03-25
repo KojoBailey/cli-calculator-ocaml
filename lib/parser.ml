@@ -32,23 +32,23 @@ let rec parse_l3 : Tokenizer.Token.t list -> parse_result = function
   | Operator Minus :: ts ->
     let* (expr, rest) = parse_l3 ts in
     Ok (Expression.UnaryOp (Negative, expr), rest)
-  | Number n :: ts -> Ok (Expression.Number n, ts)
+  | Number n :: ts -> Ok (Number n, ts)
   | Identifier id :: ts ->
     if Hashtbl.mem Variables.variable_handles id then
       let handle = Hashtbl.find Variables.variable_handles id in
-      Ok (Expression.Variable handle, ts)
+      Ok (Variable handle, ts)
     else Error ("Undefined variable: " ^ id)
   | [] -> Error "Unexpected end of expression."
   | t :: _ -> Error ("Unexpected token: " ^ [%show: Tokenizer.Token.t] t)
 
 (* LAYER 2 - Multiplication, Division *)
 and parse_l2_rest : Expression.t * Tokenizer.Token.t list -> parse_result = function
-  | (left, Tokenizer.Token.Operator Asterisk :: tokens) ->
+  | (left, Operator Asterisk :: tokens) ->
     let* (expr, rest) = parse_l3 tokens in
-    parse_l2_rest (Expression.BinaryOp (left, Multiply, expr), rest)
-  | (left, Tokenizer.Token.Operator Slash :: tokens) ->
+    parse_l2_rest (BinaryOp (left, Multiply, expr), rest)
+  | (left, Operator Slash :: tokens) ->
     let* (expr, rest) = parse_l3 tokens in
-    parse_l2_rest (Expression.BinaryOp (left, Divide, expr), rest)
+    parse_l2_rest (BinaryOp (left, Divide, expr), rest)
   | (left, tokens) -> Ok (left, tokens)
 
 and parse_l2 (tokens : Tokenizer.Token.t list) : parse_result =
@@ -56,12 +56,12 @@ and parse_l2 (tokens : Tokenizer.Token.t list) : parse_result =
 
 (* LAYER 1 - Addition, Subtraction *)
 and parse_l1_rest : Expression.t * Tokenizer.Token.t list -> parse_result = function
-  | (left, Tokenizer.Token.Operator Plus :: tokens) ->
+  | (left, Operator Plus :: tokens) ->
     let* (expr, rest) = parse_l2 tokens in
-    parse_l1_rest (Expression.BinaryOp (left, Add, expr), rest)
-  | (left, Tokenizer.Token.Operator Minus :: tokens) ->
+    parse_l1_rest (BinaryOp (left, Add, expr), rest)
+  | (left, Operator Minus :: tokens) ->
     let* (expr, rest) = parse_l2 tokens in
-    parse_l1_rest (Expression.BinaryOp (left, Subtract, expr), rest)
+    parse_l1_rest (BinaryOp (left, Subtract, expr), rest)
   | (left, tokens) -> Ok (left, tokens)
 
 and parse_l1 (tokens : Tokenizer.Token.t list) : parse_result =
