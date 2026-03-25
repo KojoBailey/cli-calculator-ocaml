@@ -24,15 +24,19 @@ let get_unary_op : Parser.Expression.un_op -> float -> float or_error = function
   | Not          -> fun x -> Ok (bool_as_float (not (float_as_bool x)))
 
 let get_binary_op : Parser.Expression.bin_op -> float -> float -> float or_error = function
-  | Add          -> fun x y -> Ok (x +. y)
-  | Subtract     -> fun x y -> Ok (x -. y)
-  | Multiply     -> fun x y -> Ok (x *. y)
-  | Divide       -> safe_div
-  | Exponentiate -> fun x y -> Ok (Float.pow x y)
-  | Equals       -> fun x y -> Ok (bool_as_float (x = y))
-  | And          -> fun x y -> Ok (bool_as_float (float_as_bool x && float_as_bool y))
-  | Or           -> fun x y -> Ok (bool_as_float (float_as_bool x || float_as_bool y))
-  | Xor          -> fun x y -> Ok (bool_as_float (float_as_bool x <> float_as_bool y))
+  | Add            -> fun x y -> Ok (x +. y)
+  | Subtract       -> fun x y -> Ok (x -. y)
+  | Multiply       -> fun x y -> Ok (x *. y)
+  | Divide         -> safe_div
+  | Exponentiate   -> fun x y -> Ok (Float.pow x y)
+  | Equals         -> fun x y -> Ok (bool_as_float (x = y))
+  | GreaterThan    -> fun x y -> Ok (bool_as_float (x > y))
+  | LessThan       -> fun x y -> Ok (bool_as_float (x < y))
+  | GreaterOrEqual -> fun x y -> Ok (bool_as_float (x >= y))
+  | LessOrEqual    -> fun x y -> Ok (bool_as_float (x <= y))
+  | And            -> fun x y -> Ok (bool_as_float (float_as_bool x && float_as_bool y))
+  | Or             -> fun x y -> Ok (bool_as_float (float_as_bool x || float_as_bool y))
+  | Xor            -> fun x y -> Ok (bool_as_float (float_as_bool x <> float_as_bool y))
 
 let rec evaluate : Parser.Expression.t -> float or_error = function
   | Number n -> Ok n

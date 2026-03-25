@@ -48,6 +48,18 @@ let () =
       eval_test_err "4.2!";
       eval_test_ok "5 = 5" 1.;
       eval_test_ok "5 = 3" 0.;
+      eval_test_ok "5 > 3" 1.;
+      eval_test_ok "3 > 5" 0.;
+      eval_test_ok "5 > 5" 0.;
+      eval_test_ok "5 < 3" 0.;
+      eval_test_ok "3 < 5" 1.;
+      eval_test_ok "5 < 5" 0.;
+      eval_test_ok "5 >= 3" 1.;
+      eval_test_ok "3 >= 5" 0.;
+      eval_test_ok "5 >= 5" 1.;
+      eval_test_ok "5 <= 3" 0.;
+      eval_test_ok "3 <= 5" 1.;
+      eval_test_ok "5 <= 5" 1.;
       eval_test_ok "not (5 = 3)" 1.;
       eval_test_ok "not (5 = 5)" 0.;
       eval_test_ok "True and True" 1.;

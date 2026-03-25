@@ -1,13 +1,17 @@
 module Token = struct
   type operator =
-  | Plus     (*| + |*)
-  | Minus    (*| - |*)
-  | Asterisk (*| * |*)
-  | Slash    (*| / |*)
-  | Caret    (*| ^ |*)
-  | Percent  (*| % |*)
-  | Bang     (*| ! |*)
-  | Equals   (*| = |*)
+  | Plus         (*|  + |*)
+  | Minus        (*|  - |*)
+  | Asterisk     (*|  * |*)
+  | Slash        (*|  / |*)
+  | Caret        (*|  ^ |*)
+  | Percent      (*|  % |*)
+  | Bang         (*|  ! |*)
+  | Equals       (*|  = |*)
+  | GreaterThan  (*|  > |*)
+  | LessThan     (*|  < |*)
+  | GreaterEqual (*| >= |*)
+  | LessEqual    (*| <= |*)
   [@@deriving show]
 
   type keyword =
@@ -83,6 +87,10 @@ let tokenize (input : string) : (Token.t list, string) result  =
     | '!' :: cs -> token_map (Token.Operator Bang) cs
     | '=' :: cs -> token_map (Token.Operator Equals) cs
     | '<' :: '-' :: cs -> token_map Token.Assignment cs
+    | '<' :: '=' :: cs -> token_map (Token.Operator LessEqual) cs
+    | '>' :: '=' :: cs -> token_map (Token.Operator GreaterEqual) cs
+    | '>' :: cs -> token_map (Token.Operator GreaterThan) cs
+    | '<' :: cs -> token_map (Token.Operator LessThan) cs
     | c :: cs when is_digit c ->
       let (num, remaining) = parse_num (c :: cs) in
       token_map (Token.Number num) remaining

@@ -6,6 +6,10 @@ module Expression = struct
   | Divide
   | Exponentiate
   | Equals
+  | GreaterThan
+  | LessThan
+  | GreaterOrEqual
+  | LessOrEqual
   | And
   | Or
   | Xor
@@ -98,6 +102,18 @@ and parse_l0_rest : Expression.t * Tokenizer.Token.t list -> parse_result = func
   | (left, Operator Equals :: tokens) ->
     let* (expr, rest) = parse_l1 tokens in
     parse_l0_rest (BinaryOp (left, Equals, expr), rest)
+  | (left, Operator GreaterThan :: tokens) ->
+    let* (expr, rest) = parse_l1 tokens in
+    parse_l0_rest (BinaryOp (left, GreaterThan, expr), rest)
+  | (left, Operator LessThan :: tokens) ->
+    let* (expr, rest) = parse_l1 tokens in
+    parse_l0_rest (BinaryOp (left, LessThan, expr), rest)
+  | (left, Operator GreaterEqual :: tokens) ->
+    let* (expr, rest) = parse_l1 tokens in
+    parse_l0_rest (BinaryOp (left, GreaterOrEqual, expr), rest)
+  | (left, Operator LessEqual :: tokens) ->
+    let* (expr, rest) = parse_l1 tokens in
+    parse_l0_rest (BinaryOp (left, LessOrEqual, expr), rest)
   | (left, Keyword And :: tokens) ->
     let* (expr, rest) = parse_l1 tokens in
     parse_l0_rest (BinaryOp (left, And, expr), rest)
