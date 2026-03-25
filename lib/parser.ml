@@ -5,12 +5,17 @@ module Expression = struct
   | Multiply
   | Divide
   | Exponentiate
+  | Equals
+  | And
+  | Or
+  | Xor
   [@@deriving show]
 
   type un_op =
   | Negative
   | Percentage
   | Factorialize
+  | Not
   [@@deriving show]
 
   type t =
@@ -25,10 +30,10 @@ let ( let* ) = Result.bind
 
 type parse_result = (Expression.t * Tokenizer.Token.t list, string) result
 
-(* LAYER 4 - Parentheses, Negatives, Variables, Numbers *)
+(* LAYER 4 - Parentheses, Negatives, Boolean Not, Variables, Numbers *)
 let rec parse_l4 : Tokenizer.Token.t list -> parse_result = function
   | ParenthesisOpen :: tokens ->
-    let* (expr, rest) = parse_l1 tokens in
+    let* (expr, rest) = parse_l0 tokens in
     begin match rest with
     | ParenthesisClose :: rest' -> Ok (expr, rest')
     | _ -> Error "Missing closing parenthesis."
@@ -42,6 +47,9 @@ let rec parse_l4 : Tokenizer.Token.t list -> parse_result = function
   | Operator Minus :: tokens ->
     let* (expr, rest) = parse_l3 tokens in
     Ok (Expression.UnaryOp (Negative, expr), rest)
+  | Keyword Not :: tokens ->
+    let* (expr, rest) = parse_l3 tokens in
+    Ok (Expression.UnaryOp (Not, expr), rest)
   | [] -> Error "Unexpected end of expression."
   | t :: _ -> Error ("Unexpected token: " ^ [%show: Tokenizer.Token.t] t)
 
@@ -85,8 +93,28 @@ and parse_l1_rest : Expression.t * Tokenizer.Token.t list -> parse_result = func
 and parse_l1 (tokens : Tokenizer.Token.t list) : parse_result =
   let* parsed = parse_l2 tokens in parse_l1_rest parsed
 
+(* LAYER 0 - Boolean Binary Operations *)
+and parse_l0_rest : Expression.t * Tokenizer.Token.t list -> parse_result = function
+  | (left, Operator Equals :: tokens) ->
+    let* (expr, rest) = parse_l1 tokens in
+    parse_l0_rest (BinaryOp (left, Equals, expr), rest)
+  | (left, Keyword And :: tokens) ->
+    let* (expr, rest) = parse_l1 tokens in
+    parse_l0_rest (BinaryOp (left, And, expr), rest)
+  | (left, Keyword Or :: tokens) ->
+    let* (expr, rest) = parse_l1 tokens in
+    parse_l0_rest (BinaryOp (left, Or, expr), rest)
+  | (left, Keyword Xor :: tokens) ->
+    let* (expr, rest) = parse_l1 tokens in
+    parse_l0_rest (BinaryOp (left, Xor, expr), rest)
+  | (left, tokens) -> Ok (left, tokens)
+
+and parse_l0 (tokens : Tokenizer.Token.t list) : parse_result =
+  let* parsed = parse_l1 tokens in parse_l0_rest parsed
+
+(* BASE *)
 let parse (tokens : Tokenizer.Token.t list) : (Expression.t, string) result = 
-  let* parsed = parse_l1 tokens in
+  let* parsed = parse_l0 tokens in
   match parsed with
   | (expr, []) -> Ok expr 
   | (_, rest)  -> Error ("Could not parse tokens: " ^ [%show: Tokenizer.Token.t list] rest)

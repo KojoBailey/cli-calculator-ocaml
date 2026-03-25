@@ -7,11 +7,20 @@ module Token = struct
   | Caret    (*| ^ |*)
   | Percent  (*| % |*)
   | Bang     (*| ! |*)
+  | Equals   (*| = |*)
+  [@@deriving show]
+
+  type keyword =
+  | Not
+  | And
+  | Or
+  | Xor
   [@@deriving show]
   
   type t =
   | Number of float (* Easier to just evaluate one number type. *)
   | Operator of operator
+  | Keyword of keyword
   | ParenthesisOpen
   | ParenthesisClose
   | Assignment
@@ -72,6 +81,7 @@ let tokenize (input : string) : (Token.t list, string) result  =
     | '^' :: cs -> token_map (Token.Operator Caret) cs
     | '%' :: cs -> token_map (Token.Operator Percent) cs
     | '!' :: cs -> token_map (Token.Operator Bang) cs
+    | '=' :: cs -> token_map (Token.Operator Equals) cs
     | '<' :: '-' :: cs -> token_map Token.Assignment cs
     | c :: cs when is_digit c ->
       let (num, remaining) = parse_num (c :: cs) in
@@ -83,7 +93,13 @@ let tokenize (input : string) : (Token.t list, string) result  =
       else Error ("Undefined constant: " ^ constant)
     | cs when is_identifier cs ->
       let (identifier, remaining) = parse_identifier cs in
-      token_map (Token.Identifier identifier) remaining
+      token_map (match identifier with
+      | "not" -> Token.Keyword Not
+      | "and" -> Token.Keyword And
+      | "or"  -> Token.Keyword Or
+      | "xor" -> Token.Keyword Xor
+      | _     -> Token.Identifier identifier
+      ) remaining
     | c :: _ -> Error ("Invalid token: " ^ String.make 1 c)
   in
   go chars
