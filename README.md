@@ -1,5 +1,5 @@
 # Command-Line Calculator - OCaml
-This is a very simple command-line calculator that evaluates expressions, programmed in OCaml.
+This is a command-line calculator that evaluates mathematical expressions, programmed in OCaml.
 
 ## Usage
 ```
@@ -52,6 +52,16 @@ To see the output of both the tokeniser and parser, run the app with `True` as t
 ```
 
 ## Features
+### Basics
+All numbers are treated as floats, although there are no supported `NaN` or infinities.
+
+Expressions can be chained in one line via the `>>>` operator, and functions as if you wrote the same stuff on separate lines, except only the result of the final expression is printed.
+
+```
+>>> x <- 5 >>> y <- 3 >>> x * y
+15.
+```
+
 ### Operators
 There are quite a few operators defined for this calculator:
 - Addition (a + b)
@@ -63,6 +73,10 @@ There are quite a few operators defined for this calculator:
 - Percentage (a% = a / 100)
 - Factorial (a! = a * a-1 * ... * 1)
 - Equals (a = b)
+- Greater Than (a > b)
+- Less Than (a < b)
+- Greater Or Equal To (a >= b)
+- Less Than Or Equal To (a <= b)
 - Not (!a)
 - And (a and b)
 - Or (a or b)
@@ -107,12 +121,20 @@ Invalid! Cannot create constants.
 Invalid! Constant isn't defined.
 ```
 
+### Built-in Functions
+There are **built-in functions** provided, and like the [constants](#Constants), they all start with an uppercase letter. They are called like you would expect in maths with parentheses notation (e.g. `Sin(Pi)`).
+
+The existing functions so far are:
+- `Abs` - absolute value
+- `Sin` - trigonometric sine
+- `Cos` - trigonometric cosine
+
+`Sin` is specially defined such that the intervals of `Pi/2` give exact values between `0`, `1`, and `-1`. `Cos` is simply defined as `Sin(x + Pi/2)`, so the same is true for it.
+
 ### TBA
 I don't guarantee I'll add these, but some features I'm thinking of adding are:
 - More constants, probably primarily from Physics since it has a lot.
-- Functions, both built-in (`Cos`, `Log`, etc.) and user-defined.
-- Chaining commands via `;` or some other operator (`>>>` looks schmexy).
-- Ordering boolean operators, `<`, `<=`, `>`, and `>=`.
+- User-defined functions, as well as more built-in (e.g., `Log`, `Mod`, `Exp`).
 - Implicit multiplication for numbers next to variables (i.e. `5x` = `5 * x`).
 
 ## Motivation
