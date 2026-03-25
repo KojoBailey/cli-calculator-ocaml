@@ -31,6 +31,13 @@ let parse_identifier (cs : char list) : string * char list =
   let rest = List.drop_while condition cs in
   (word, rest)
 
+let is_constant (cs : char list) : bool =
+  let uppercase_chars = List.init 26 (fun i -> Char.chr (Char.code 'A' + i)) in
+  if not (List.mem (List.hd cs) uppercase_chars) then false
+  else
+    let word = List.take_while (fun c -> List.mem c valid_identifier_chars) cs in
+    List.fold_left (fun acc c -> acc && List.mem c valid_identifier_chars) true word
+
 let is_identifier (cs : char list) : bool =
   let lowercase_chars = List.init 26 (fun i -> Char.chr (Char.code 'a' + i)) in
   if not (List.mem (List.hd cs) lowercase_chars) then false
@@ -63,6 +70,11 @@ let tokenize (input : string) : (Token.t list, string) result  =
     | c :: cs when is_digit c ->
       let (num, remaining) = parse_num (c :: cs) in
       token_map (Token.Number num) remaining
+    | cs when is_constant cs ->
+      let (constant, remaining) = parse_identifier cs in
+      if Hashtbl.mem Constants.constants constant
+      then token_map (Token.Number (Hashtbl.find Constants.constants constant)) remaining
+      else Error ("Undefined constant: " ^ constant)
     | cs when is_identifier cs ->
       let (identifier, remaining) = parse_identifier cs in
       token_map (Token.Identifier identifier) remaining
