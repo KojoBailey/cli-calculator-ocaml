@@ -21,6 +21,8 @@ This is a command-line calculator that evaluates mathematical expressions, progr
 
 (`>>>` denotes user input.)
 
+To quit, just enter `:q`.
+
 ### Verbose output
 To see the output of both the tokeniser and parser, run the app with `True` as the first argument:
 
