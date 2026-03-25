@@ -64,5 +64,6 @@ let () =
       eval_test_ok "1 xor 0" 1.;
       eval_test_ok "0 xor 0" 0.;
       eval_test_ok "0 xor 3" 1.;
+      eval_test_err "and <- 5";
     ];
   ]
