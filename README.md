@@ -14,6 +14,9 @@ This is a very simple command-line calculator that evaluates expressions, progra
 
 >>> 5 + x
 8.
+
+>>> 5 * 5 * Pi
+78.5398163397
 ```
 
 (`>>>` denotes user input.)
@@ -49,6 +52,7 @@ To see the output of both the tokeniser and parser, run the app with `True` as t
 ```
 
 ## Features
+### Operators
 For my own sanity, this is extremely limited, so the only supported operations are:
 - Addition (a + b)
 - Subtraction (a - b)
@@ -61,6 +65,7 @@ This should all follow the rules of [PEDMAS](https://en.wikipedia.org/wiki/Order
 
 You should also get errors if you try doing anything invalid, such as `5 +- 2 *` or dividing by zero. If you are able to get something to successfully evaluate that doesn't make sense, please also open an issue!
 
+### Variables
 You are also able to store values in **variables**. These can only contain lowercase and uppercase Engish letters, numerical digits, and an `_`; and can only start with just lowercase letters.
 
 To assign a variable, use the `<-` syntax. Note that `<-` is *not* an operator, and is only valid as special syntax *before* an expression (not inside one).
@@ -71,6 +76,22 @@ Valid.
 
 >>> 3 + x <- 5
 Invalid!
+```
+
+### Constants
+**Constants** start with a uppercase letter and cannot be assigned to. The current supported constants are:
+- Pi: `Pi` = `3.141592653589793`
+- Euler's constant: `E` = `78.5398163397`
+
+```
+>>> Pi * 5 * 5
+Valid.
+
+>>> Foo <- 3
+Invalid! Cannot create constants.
+
+>>> 7 + Jimbob
+Invalid! Constant isn't defined.
 ```
 
 ## Motivation
