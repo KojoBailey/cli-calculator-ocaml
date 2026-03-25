@@ -17,6 +17,8 @@ This is a command-line calculator that evaluates mathematical expressions, progr
 
 >>> 5 * 5 * Pi
 78.5398163397
+
+>>> :q
 ```
 
 (`>>>` denotes user input.)
