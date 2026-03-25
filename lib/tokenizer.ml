@@ -4,7 +4,6 @@ module Token = struct
   | Minus
   | Asterisk
   | Slash
-  | LeftArrow
   [@@deriving show]
   
   type t =
@@ -12,6 +11,7 @@ module Token = struct
     | Operator of operator
     | ParenthesisOpen
     | ParenthesisClose
+    | Assignment
     | Identifier of string
   [@@deriving show]
 end
@@ -59,7 +59,7 @@ let tokenize (input : string) : (Token.t list, string) result  =
     | '-' :: cs -> token_map (Token.Operator Minus) cs
     | '*' :: cs -> token_map (Token.Operator Asterisk) cs
     | '/' :: cs -> token_map (Token.Operator Slash) cs
-    | '<' :: '-' :: cs -> token_map (Token.Operator LeftArrow) cs
+    | '<' :: '-' :: cs -> token_map Token.Assignment cs
     | c :: cs when is_digit c ->
       let (num, remaining) = parse_num (c :: cs) in
       token_map (Token.Number num) remaining

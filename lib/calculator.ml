@@ -13,7 +13,7 @@ let calculate (input : string) : (float, string) result =
   end;
   let assign_target : string option ref = ref None in
   let tokens' = begin match tokens with
-  | Tokenizer.Token.Identifier id :: Tokenizer.Token.Operator LeftArrow :: ts ->
+  | Identifier id :: Assignment :: ts ->
       assign_target := Some id;
       ts
   | ts -> ts

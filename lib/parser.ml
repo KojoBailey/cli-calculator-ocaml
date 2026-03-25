@@ -23,17 +23,17 @@ type parse_result = (Expression.t * Tokenizer.Token.t list, string) result
 
 (* LAYER 3 - Parenthesis, Negatives, Numbers *)
 let rec parse_l3 : Tokenizer.Token.t list -> parse_result = function
-  | Tokenizer.Token.ParenthesisOpen :: ts ->
+  | ParenthesisOpen :: ts ->
     let* (expr, rest) = parse_l1 ts in
     begin match rest with
-    | Tokenizer.Token.ParenthesisClose :: rest' -> Ok (expr, rest')
+    | ParenthesisClose :: rest' -> Ok (expr, rest')
     | _ -> Error "Missing closing parenthesis."
     end
-  | Tokenizer.Token.Operator Minus :: ts ->
+  | Operator Minus :: ts ->
     let* (expr, rest) = parse_l3 ts in
     Ok (Expression.UnaryOp (Negative, expr), rest)
-  | Tokenizer.Token.Number n :: ts -> Ok (Expression.Number n, ts)
-  | Tokenizer.Token.Identifier id :: ts ->
+  | Number n :: ts -> Ok (Expression.Number n, ts)
+  | Identifier id :: ts ->
     if Hashtbl.mem Variables.variable_handles id then
       let handle = Hashtbl.find Variables.variable_handles id in
       Ok (Expression.Variable handle, ts)
